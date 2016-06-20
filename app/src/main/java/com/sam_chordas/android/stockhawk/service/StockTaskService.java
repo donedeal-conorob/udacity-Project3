@@ -106,6 +106,14 @@ public class StockTaskService extends GcmTaskService{
       } catch (UnsupportedEncodingException e){
         e.printStackTrace();
       }
+    } else if (params.getTag().equals("linegraph")) {
+        isUpdate = true;
+        String stockInput = params.getExtras().getString("symbol");
+        try {
+            urlStringBuilder.append(URLEncoder.encode("\""+stockInput+"\")", "UTF-8"));
+        } catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
     }
     // finalize the URL for the API query.
     urlStringBuilder.append("&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables."

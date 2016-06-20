@@ -91,8 +91,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this,
             new RecyclerViewItemClickListener.OnItemClickListener() {
               @Override public void onItemClick(View v, int position) {
-                //TODO:
-                // do something on item click
+                  startLineGraphActivity(position);
               }
             }));
     recyclerView.setAdapter(mCursorAdapter);
@@ -250,5 +249,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   public void onLoaderReset(Loader<Cursor> loader){
     mCursorAdapter.swapCursor(null);
   }
+
+    private void startLineGraphActivity(int position) {
+        Intent intent = new Intent(this, LineGraphActivity.class);
+        intent.putExtra("itemSymbol", mCursorAdapter.getItemSymbol(position));
+        startActivity(intent);
+    }
 
 }

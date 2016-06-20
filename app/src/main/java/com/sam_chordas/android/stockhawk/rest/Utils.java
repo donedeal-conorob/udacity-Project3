@@ -2,8 +2,13 @@ package com.sam_chordas.android.stockhawk.rest;
 
 import android.content.ContentProviderOperation;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
+
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
+
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,9 +33,10 @@ public class Utils {
         jsonObject = jsonObject.getJSONObject("query");
         int count = Integer.parseInt(jsonObject.getString("count"));
         if (count == 1){
-          jsonObject = jsonObject.getJSONObject("results")
-              .getJSONObject("quote");
-          batchOperations.add(buildBatchOperation(jsonObject));
+            if (isAValidStock(jsonObject)) {
+                jsonObject = jsonObject.getJSONObject("results").getJSONObject("quote");
+                batchOperations.add(buildBatchOperation(jsonObject));
+            }
         } else{
           resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
 
@@ -48,7 +54,12 @@ public class Utils {
     return batchOperations;
   }
 
-  public static String truncateBidPrice(String bidPrice){
+    private static boolean isAValidStock(JSONObject jsonObject) throws JSONException {
+        return jsonObject != null && jsonObject.length() != 0 &&
+                !"null".equals(jsonObject.getJSONObject("results").getJSONObject("quote").getString("Change"));
+    }
+
+    public static String truncateBidPrice(String bidPrice){
     bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
     return bidPrice;
   }
